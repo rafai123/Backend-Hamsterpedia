@@ -70,8 +70,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         }).promise()
         console.log(`the url : ${fileUrl}`)
         // const presigned = await S3.sign()
-        console.log()
-        res.status(200).json({message: `<a href="${fileUrl}">Link file = ${fileUrl}</a>`})
+        console.log(fileUrl)
+        res.status(200).json({message: `${fileUrl}`})
     } catch (e) {
         res.status(400).json({message: e})
     }
