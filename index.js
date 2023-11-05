@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 })
 
 app.post("/upload", upload.single("file"), async (req, res) => {
-    console.log(req.file)
+    // console.log(req.file)
     const publicBucketUrl = "https://pub-83c13c4b6141426b8e4d3d54567ecbb9.r2.dev/"
     let randomKey = Math.round(Math.random()*999999999)
     let stringRandomKey = randomKey.toString() + randomKey.toString() + randomKey.toString() + randomKey.toString() + randomKey.toString()
@@ -70,6 +70,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         }).promise()
         console.log(`the url : ${fileUrl}`)
         // const presigned = await S3.sign()
+        console.log()
         res.status(200).json({message: `<a href="${fileUrl}">Link file = ${fileUrl}</a>`})
     } catch (e) {
         res.status(400).json({message: e})
