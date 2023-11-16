@@ -29,9 +29,9 @@ app.get("/", (req, res) => {
 app.post("/upload", upload.single("file"), async (req, res) => {
     // console.log(req.file)
     const publicBucketUrl = "https://pub-83c13c4b6141426b8e4d3d54567ecbb9.r2.dev/"
-    let randomKey = Math.round(Math.random()*999999999)
-    let stringRandomKey = randomKey.toString() + randomKey.toString() + randomKey.toString() + randomKey.toString() + randomKey.toString()
-    const fileName = req.file.originalname
+    let randomKey = Math.round(Math.random()*99999999999999)
+    let stringRandomKey = randomKey.toString()
+    // const fileName = req.file.originalname
     const fileUrl = publicBucketUrl + stringRandomKey
     // res.send("File Upload")
     // const S3 = new S3Client({
@@ -43,6 +43,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     //     }
     // })
 
+    console.log(req.body)
+    console.log(req.body.nama)
     const S3 = new  AWS.S3({
         region: "auto",
         endpoint: process.env.ENDPOINT,
