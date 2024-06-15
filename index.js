@@ -9,17 +9,20 @@ const cors = require("cors")
 const AWS = require("aws-sdk")
 const dotenv = require("dotenv")
 
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+
 const app = express()
-const port = 3000
+const port = 3003
 
 // middleware
 app.use(cors())
 dotenv.config()
 
 const storage = multer.memoryStorage()
-const upload = multer({
-    storage,
-})
+const upload = multer({storage})
+
+const Prisma = new PrismaClient()
 
 
 app.get("/", (req, res) => {
@@ -27,24 +30,16 @@ app.get("/", (req, res) => {
 })
 
 app.post("/upload", upload.single("file"), async (req, res) => {
+    const { author, description } = req.body
+    console.log({author, description})
+
     // console.log(req.file)
     const publicBucketUrl = "https://pub-83c13c4b6141426b8e4d3d54567ecbb9.r2.dev/"
-    let randomKey = Math.round(Math.random()*99999999999999)
+    let randomKey = Math.round(Math.random()*9999999999)
     let stringRandomKey = randomKey.toString()
     // const fileName = req.file.originalname
     const fileUrl = publicBucketUrl + stringRandomKey
-    // res.send("File Upload")
-    // const S3 = new S3Client({
-    //     region: "auto",
-    //     endpoint: process.env.ENDPOINT,
-    //     credentials: {
-    //         accessKeyId: process.env.R2_ACCESS_KEY_ID,
-    //         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-    //     }
-    // })
 
-    console.log(req.body)
-    console.log(req.body.nama)
     const S3 = new  AWS.S3({
         region: "auto",
         endpoint: process.env.ENDPOINT,
@@ -53,15 +48,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
             secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
         }
     })
-
-    // await S3.send(
-    //     new PutObjectCommand({
-    //         Body: req.file.buffer,
-    //         Bucket: "fullstack-team",
-    //         Key: req.file.originalname,
-    //         ContentType: req.file.mimetype
-    //     })
-    // )
 
     try {
         await S3.upload({
@@ -73,11 +59,41 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         console.log(`the url : ${fileUrl}`)
         // const presigned = await S3.sign()
         console.log(fileUrl)
-        res.status(200).json({message: `${fileUrl}`})
+
+        await prisma.posts.create({
+            data: {
+                author: author,
+                description: description,
+                image: fileUrl,
+                title: " "
+            }
+        })
+
+        console.log({data: {
+            author: author,
+            description: description,
+            image: fileUrl,
+        }})
+        
+        res.status(200).json({
+            message: `${fileUrl}`,
+            author,
+            description
+        })
     } catch (e) {
+        console.log(e)
         res.status(400).json({message: e})
     }
 
+})
+
+app.get("/allposts", async (req, res) => {
+    try {
+        const allPosts = await prisma.posts.findMany()
+        res.status(200).json(allPosts)
+    } catch (error) {
+        res.status(400).json({message: error})
+    }
 })
 
 app.listen(port, () => {
