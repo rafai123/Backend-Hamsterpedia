@@ -5,11 +5,12 @@ const cors = require("cors")
 const AWS = require("aws-sdk")
 const dotenv = require("dotenv")
 
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
-
 const app = express()
 const port = 3003
+
+// import from utils
+const S3 = require("./utils/S3")
+const prisma = require("./utils/prisma")
 
 // middleware
 app.use(cors())
@@ -29,15 +30,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     let randomKey = Math.round(Math.random()*9999999999)
     let stringRandomKey = randomKey.toString() + "-HamsterPedia.com"
     const fileUrl = publicBucketUrl + stringRandomKey
-
-    const S3 = new  AWS.S3({
-        region: "auto",
-        endpoint: process.env.ENDPOINT,
-        credentials: {
-            accessKeyId: process.env.R2_ACCESS_KEY_ID,
-            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-        }
-    })
 
     try {
         await S3.upload({
