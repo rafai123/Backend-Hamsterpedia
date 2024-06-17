@@ -4,12 +4,12 @@ const cors = require("cors")
 // const {S3Client, PutObjectCommand} = require("@aws-sdk/client-s3")
 const AWS = require("aws-sdk")
 const dotenv = require("dotenv")
-
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const prisma = require("./utils/prisma")
+const S3 = require("./utils/S3")
 
 const app = express()
 const port = 3003
+
 
 // middleware
 app.use(cors())
@@ -30,15 +30,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     let stringRandomKey = randomKey.toString() + "-HamsterPedia.com"
     const fileUrl = publicBucketUrl + stringRandomKey
 
-    const S3 = new  AWS.S3({
-        region: "auto",
-        endpoint: process.env.ENDPOINT,
-        credentials: {
-            accessKeyId: process.env.R2_ACCESS_KEY_ID,
-            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-        }
-    })
-
     try {
         await S3.upload({
             Body: req.file.buffer,
@@ -52,7 +43,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
                 author: author,
                 description: description,
                 image: fileUrl,
-                title: " "
+                title: ""
             }
         })
 
@@ -76,8 +67,31 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
 app.get("/allposts", async (req, res) => {
     try {
-        const allPosts = await prisma.posts.findMany()
+        const allPosts = await prisma.posts.findMany({
+            include: {
+                comments: true
+            }
+        })
         res.status(200).json(allPosts)
+    } catch (error) {
+        res.status(400).json({message: error})
+    }
+})
+
+app.post("/addcomment/:id", async (req, res) => {
+    const { id } = req.params
+    const { author, comment } = req.body
+
+    try {
+        const newComment = await prisma.comments.create({
+            data: {
+                author: author,
+                comment: comment,
+                postsId: parseInt(id)
+            }
+        })
+        console.log("Komentar berhasil ditambahkan : ", newComment)
+        res.status(200).json({message: "Comment added", newComment})
     } catch (error) {
         res.status(400).json({message: error})
     }
