@@ -4,12 +4,13 @@ const cors = require("cors")
 // const {S3Client, PutObjectCommand} = require("@aws-sdk/client-s3")
 const AWS = require("aws-sdk")
 const dotenv = require("dotenv")
-const prisma = require("./utils/prisma")
-const S3 = require("./utils/S3")
 
 const app = express()
 const port = 3003
 
+// import utils
+const prisma = require("./utils/prisma")
+const S3 = require("./utils/S3")
 
 // middleware
 app.use(cors())
@@ -100,7 +101,6 @@ app.post("/addcomment/:id", async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is lisening on port ${port}`)
 })
-
 
 // export default app
 module.exports = app
