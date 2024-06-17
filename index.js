@@ -2,7 +2,7 @@ const express = require("express")
 const multer = require("multer")
 const cors = require("cors")
 // const {S3Client, PutObjectCommand} = require("@aws-sdk/client-s3")
-const AWS = require("aws-sdk")
+// const AWS = require("aws-sdk")
 const dotenv = require("dotenv")
 
 const app = express()

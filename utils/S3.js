@@ -1,3 +1,5 @@
+const AWS = require('aws-sdk')
+
 const S3 = new  AWS.S3({
     region: "auto",
     endpoint: process.env.ENDPOINT,
