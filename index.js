@@ -20,7 +20,7 @@ const storage = multer.memoryStorage()
 const upload = multer({storage})
 
 app.get("/", (req, res) => {
-    res.send("Hello World!")
+    res.send("Backend for HamsterPedia is running!, \n for get all post : thislink/allposts \n to add comment addcomment/:idPost")
 })
 
 app.post("/upload", upload.single("file"), async (req, res) => {
