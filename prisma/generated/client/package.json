@@ -79,6 +79,6 @@
     },
     "./*": "./*"
   },
-  "version": "5.15.1",
+  "version": "5.15.0",
   "sideEffects": false
 }
