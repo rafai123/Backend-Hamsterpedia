@@ -20,4 +20,4 @@ const libsql = createClient({
 const adapter = new PrismaLibSQL(libsql)
 const prisma = new PrismaClient({ adapter })
 
-module.exports = prisma
+// module.exports = prisma
