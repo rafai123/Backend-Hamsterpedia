@@ -15,6 +15,7 @@ const prisma = require("./utils/prisma")
 // middleware
 app.use(cors())
 dotenv.config()
+app.use(express.json())
 
 const storage = multer.memoryStorage()
 const upload = multer({storage})
@@ -75,29 +76,45 @@ app.get("/allposts", async (req, res) => {
         })
         res.status(200).json(allPosts)
     } catch (error) {
+        console.log(error)
         res.status(400).json({message: error})
     }
 })
 
 app.post("/addcomment/:id", async (req, res) => {
-    const { id } = req.params
-    const { author, comment } = req.body
-
+    const { id } = req.params;
+    console.log("id", id);
+    console.log("req.body", req.body);
+    
+    const { author, comment } = req.body;
 
     try {
+        // const newComment = await prisma.comments.create({
+        //     data: {
+        //         author: author,
+        //         comment: comment,
+        //         postsId: parseInt(id)
+        //     }
+        // });
         const newComment = await prisma.comments.create({
             data: {
                 author: author,
                 comment: comment,
-                postsId: parseInt(id)
+                post: {
+                    connect: {
+                        id: parseInt(id)
+                    }
+                }
             }
-        })
-        console.log("Komentar berhasil ditambahkan :", newComment)
-        res.status(200).json({message: "Comment added", newComment})
+        });
+        console.log("Komentar berhasil ditambahkan :", newComment);
+        res.status(200).json({ message: "Comment added", newComment });
     } catch (error) {
-        res.status(400).json({message: error})
+        console.log("error", error);
+        res.status(400).json({ message: error.message });
     }
-})
+});
+
 
 app.listen(port, () => {
     console.log(`Server is lisening on port ${port}`)
