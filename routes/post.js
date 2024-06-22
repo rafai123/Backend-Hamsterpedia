@@ -55,8 +55,6 @@ router.post("/addpost", upload.single("file"), async (req, res) => {
 
 router.get("/allposts", async (req, res) => {
     let category = req.query.category
-    (!category ? category = "general" : category = category)
-    console.log(category)
     try {
         const allPosts = await prisma.posts.findMany({
             where: {
