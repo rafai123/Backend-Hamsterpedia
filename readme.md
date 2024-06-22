@@ -1,4 +1,3 @@
-```markdown
 # HamsterPedia Backend
 
 Backend API for the HamsterPedia application built using Express.js, Prisma, Multer, and AWS S3.
@@ -9,12 +8,13 @@ Backend API for the HamsterPedia application built using Express.js, Prisma, Mul
 - [Configuration](#configuration)
 - [Running the Server](#running-the-server)
 - [Endpoints](#endpoints)
-  - [GET /](#get-)
+  - [GET /](#get-root)
   - [POST /post/addpost](#post-postaddpost)
   - [GET /post/allposts](#get-postallposts)
-  - [POST /comment/addcomment:id](#post-commentaddcommentid)
+  - [POST /comment/addcomment/:id](#post-commentaddcommentid)
 - [Project Structure](#project-structure)
 - [License](#license)
+- [Additional Notes](#additional-notes)
 
 ## Requirements
 - Node.js
@@ -25,8 +25,8 @@ Backend API for the HamsterPedia application built using Express.js, Prisma, Mul
 ## Installation
 1. Clone this repository:
     ```bash
-    git clone https://github.com/rafai123/Backend-Hamsterpedia.git
-    cd Backend-Hamsterpedia
+    git clone https://github.com/rafai123/Backend-HamsterPedia.git
+    cd Backend-HamsterPedia
     ```
 2. Install dependencies:
     ```bash
@@ -194,5 +194,4 @@ const S3 = new AWS.S3({
 });
 
 module.exports = S3;
-```
 ```
