@@ -60,6 +60,9 @@ router.get("/allposts", async (req, res) => {
             where: {
                 category: category
             },
+            orderBy: {
+                id: "desc"
+            },
             include: {
                 comments: true
             }
