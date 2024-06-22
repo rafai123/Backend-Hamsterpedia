@@ -18,6 +18,7 @@ model Posts {
   title         String
   description   String
   image         String  
+  category      String @default("General")
   createdAt DateTime @default(now())
   comments     Comments[]
 }
