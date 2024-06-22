@@ -18,15 +18,13 @@ router.post("/addpost", upload.single("file"), async (req, res) => {
     const fileUrl = `${publicBucketUrl}${stringRandomKey}`;
 
     try {
-
-        if (!req.file) {
-        await S3.upload({
-            Body: req.file.buffer,
-            Bucket: "fullstack-team",
-            Key: stringRandomKey,
-            ContentType: req.file.mimetype
-        }).promise()
-
+        if (req.file) {
+            await S3.upload({
+                Body: req.file.buffer,
+                Bucket: "fullstack-team",
+                Key: stringRandomKey,
+                ContentType: req.file.mimetype
+            }).promise()
         } else {
             fileUrl = " "
         }
