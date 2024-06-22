@@ -4,7 +4,7 @@ const router = express.Router();
 // import from utils
 const prisma = require("../utils/prisma")
 
-router.post("/addcomment:id", async (req, res) => {
+router.post("/addcomment/:id", async (req, res) => {
     const { author, comment } = req.body
     const { id } = req.params
 

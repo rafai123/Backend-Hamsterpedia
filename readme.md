@@ -1,9 +1,9 @@
+```markdown
 # HamsterPedia Backend
 
 Backend API for the HamsterPedia application built using Express.js, Prisma, Multer, and AWS S3.
 
 ## Table of Contents
-
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -17,69 +17,53 @@ Backend API for the HamsterPedia application built using Express.js, Prisma, Mul
 - [License](#license)
 
 ## Requirements
-
 - Node.js
 - NPM or Yarn
 - Prisma CLI
 - AWS Account (for S3)
 
 ## Installation
-
 1. Clone this repository:
-
     ```bash
-    git clone https://github.com/username/hamsterpedia-backend.git
-    cd hamsterpedia-backend
+    git clone https://github.com/rafai123/Backend-Hamsterpedia.git
+    cd Backend-Hamsterpedia
     ```
-
 2. Install dependencies:
-
     ```bash
     npm install
     ```
-
 3. Set up Prisma:
-
     ```bash
     npx prisma migrate dev --name init
     ```
 
 ## Configuration
-
 Create a `.env` file in the root directory of the project and add the following configuration:
-
 ```env
 DATABASE_URL="mysql://user:password@localhost:3306/mydb"
-AWS_ACCESS_KEY_ID="your_aws_access_key"
-AWS_SECRET_ACCESS_KEY="your_aws_secret_key"
-AWS_REGION="your_aws_region"
-S3_BUCKET_NAME="your_s3_bucket_name"
+R2_ACCESS_KEY_ID="your_r2_access_key_id"
+R2_SECRET_ACCESS_KEY="your_r2_secret_access_key"
+ENDPOINT="your_r2_endpoint"
 ```
 
 ## Running the Server
-
 Start the server with the following command:
-
 ```bash
 npm start
 ```
-
 The server will run on port `3003`. You can access it at `http://localhost:3003`.
 
 ## Endpoints
 
 ### GET /
-
 Returns a message indicating that the HamsterPedia backend is running.
 
 **Request:**
-
 ```http
 GET /
 ```
 
 **Response:**
-
 ```json
 {
   "message": "Backend for HamsterPedia is running!"
@@ -87,25 +71,21 @@ GET /
 ```
 
 ### POST /post/addpost
-
 Adds a new post.
 
 **Request:**
-
 ```http
 POST /post/addpost
 Content-Type: multipart/form-data
 ```
 
 **Form Data:**
-
 - `file`: Image file to be uploaded
 - `author`: Name of the author
 - `description`: Description of the post
 - `category`: Category of the post
 
 **Response:**
-
 ```json
 {
   "message": "https://your_s3_bucket_url/your_random_key",
@@ -116,17 +96,14 @@ Content-Type: multipart/form-data
 ```
 
 ### GET /post/allposts
-
 Fetches all posts.
 
 **Request:**
-
 ```http
 GET /post/allposts
 ```
 
 **Response:**
-
 ```json
 [
   {
@@ -146,19 +123,16 @@ GET /post/allposts
 ]
 ```
 
-### POST /comment/addcomment:id
-
+### POST /comment/addcomment/:id
 Adds a comment to a post.
 
 **Request:**
-
 ```http
-POST /comment/addcomment:id
+POST /comment/addcomment/:id
 Content-Type: application/json
 ```
 
 **Body:**
-
 ```json
 {
   "author": "Comment Author",
@@ -167,7 +141,6 @@ Content-Type: application/json
 ```
 
 **Response:**
-
 ```json
 {
   "message": "Comment added",
@@ -181,7 +154,6 @@ Content-Type: application/json
 ```
 
 ## Project Structure
-
 ```
 hamsterpedia-backend/
 ├── node_modules/
@@ -202,3 +174,25 @@ hamsterpedia-backend/
 
 ## License
 HamsterPedia Copyright (c) 2024.
+
+## Additional Notes
+
+### utils/S3.js
+
+Configuration for AWS S3.
+
+```javascript
+const AWS = require('aws-sdk');
+
+const S3 = new AWS.S3({
+    region: "auto",
+    endpoint: process.env.ENDPOINT,
+    credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+    }
+});
+
+module.exports = S3;
+```
+```
