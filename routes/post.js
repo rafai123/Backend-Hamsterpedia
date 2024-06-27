@@ -78,5 +78,37 @@ router.get("/allposts", async (req, res) => {
     }
 })
 
+router.get("/delete/allposts", async (req, res) => {
+    try {
+        // await prisma.posts.deleteMany()
+        const deleteComments = prisma.comments.deleteMany()
+        const deletePosts = prisma.posts.deleteMany()
+
+        await prisma.$transaction([deleteComments, deletePosts])
+        res.status(200).json({message: "All posts deleted"})
+    } catch (e) {
+        res.status(400).json({message: e.message})
+    }
+})
+
+router.get("/delete/:idPost", async (req, res) => {
+    try {
+        const idPost = parseInt(req.params.idPost)
+        await prisma.comments.deleteMany({
+            where: {
+                postId: idPost
+            }
+        })
+        await prisma.posts.delete({
+            where: {
+                id: idPost
+            }
+        })
+        res.status(200).json({message: "Post deleted"})
+    } catch (e) {
+        res.status(400).json({message: e.message})
+    }
+})
+
 
 module.exports = router;
